@@ -10,7 +10,6 @@
 <meta name="theme-color" content="#0a234c">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-512.png">
-<link rel="manifest" href="manifest.json">
 <style>
 :root{--bg:#0a234c;--fg:#fff;--mute:#c9d3e6;--gold:#efb02c}
 *{box-sizing:border-box}html,body{height:100%}
@@ -20,7 +19,8 @@ img{width:96px;height:96px;border-radius:22px}
 h1{margin:0;font-size:1.5rem}p{margin:0;color:var(--mute)}
 ol{text-align:left;margin:0;padding-left:1.3em;color:var(--mute);display:grid;gap:6px}
 b{color:var(--fg)}
-a.go{display:inline-block;margin-top:6px;padding:13px 20px;border-radius:14px;background:var(--gold);color:#0a234c;font-weight:700;text-decoration:none}
+[hidden]{display:none!important}
+a.go,button.go{display:inline-block;border:0;font:inherit;cursor:pointer;margin-top:6px;padding:13px 20px;border-radius:14px;background:var(--gold);color:#0a234c;font-weight:700;text-decoration:none}
 </style></head>
 <body><main>
 <img src="icon-180.png" alt="">
@@ -30,18 +30,30 @@ a.go{display:inline-block;margin-top:6px;padding:13px 20px;border-radius:14px;ba
 <ol><li>Unten bzw. oben auf <b>Teilen</b> tippen.</li><li><b>Zum Home-Bildschirm</b> wählen.</li><li><b>Als Web-App öffnen</b> anlassen und <b>Hinzufügen</b> tippen.</li></ol>
 <p>Danach startet LevelUp über das Symbol direkt.</p>
 </div>
-<p id="err" hidden>In diesem Link fehlt die Adresse von LevelUp.</p>
+<div id="ask" hidden style="display:grid;gap:10px;width:100%">
+<p>Füge einmal deinen LevelUp-Link ein. Die Web-App merkt ihn sich, danach startet LevelUp beim Antippen sofort.</p>
+<input id="u" type="url" inputmode="url" autocapitalize="off" autocorrect="off" placeholder="https://claude.ai/artifact/…" style="font:inherit;padding:12px 14px;border-radius:12px;border:0;width:100%">
+<button class="go" id="save" type="button">Speichern und öffnen</button>
+<p id="bad" hidden style="color:#ffb4a8">Das ist kein LevelUp-Link. Er beginnt mit https://claude.ai/artifact/</p>
+</div>
 <a class="go" id="go" href="#" hidden>LevelUp öffnen</a>
 </main>
 <script>
 (function(){
+  var K='levelup.start';
+  var re=/^https:\/\/claude\.ai\/(artifact|code\/artifact)\/[A-Za-z0-9_-]+\/?$/;
+  function get(){try{return localStorage.getItem(K)||''}catch(e){return ''}}
+  function put(v){try{localStorage.setItem(K,v)}catch(e){}}
   var m=/[#&]u=([^&]+)/.exec(location.hash),u=m?decodeURIComponent(m[1]):'';
-  var ok=/^https:\/\/claude\.ai\/(artifact|code\/artifact)\/[A-Za-z0-9_-]+\/?$/.test(u);
+  if(re.test(u))put(u);else u=get();
   var app=window.navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
-  var go=document.getElementById('go');
-  if(!ok){document.getElementById('err').hidden=false;return}
+  var go=document.getElementById('go'),ask=document.getElementById('ask');
+  function open(v){document.getElementById('h').textContent='LevelUp wird geöffnet …';location.replace(v)}
+  document.getElementById('save').onclick=function(){var v=document.getElementById('u').value.trim().split('#')[0].split('?')[0];
+    if(!re.test(v)){document.getElementById('bad').hidden=false;return}put(v);open(v)};
+  if(!re.test(u)){ask.hidden=false;return}
   go.href=u;go.hidden=false;
-  if(app){document.getElementById('h').textContent='LevelUp wird geöffnet …';setTimeout(function(){location.replace(u)},150)}
+  if(app)setTimeout(function(){open(u)},150);
   else document.getElementById('info').hidden=false;
 })();
 </script>
