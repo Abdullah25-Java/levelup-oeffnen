@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LevelUp</title>
+<meta name="robots" content="noindex">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="LevelUp">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a234c">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-512.png">
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--bg:#0a234c;--fg:#fff;--mute:#c9d3e6;--gold:#efb02c}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;display:grid;place-items:center;padding:24px max(20px,env(safe-area-inset-left)) 24px max(20px,env(safe-area-inset-right))}
+main{width:min(460px,100%);display:grid;gap:16px;text-align:center;justify-items:center}
+img{width:96px;height:96px;border-radius:22px}
+h1{margin:0;font-size:1.5rem}p{margin:0;color:var(--mute)}
+ol{text-align:left;margin:0;padding-left:1.3em;color:var(--mute);display:grid;gap:6px}
+b{color:var(--fg)}
+a.go{display:inline-block;margin-top:6px;padding:13px 20px;border-radius:14px;background:var(--gold);color:#0a234c;font-weight:700;text-decoration:none}
+</style></head>
+<body><main>
+<img src="icon-180.png" alt="">
+<h1 id="h">LevelUp</h1>
+<div id="info" hidden>
+<p>Leg diese Seite einmal auf deinen Home-Bildschirm:</p>
+<ol><li>Unten bzw. oben auf <b>Teilen</b> tippen.</li><li><b>Zum Home-Bildschirm</b> wählen.</li><li><b>Als Web-App öffnen</b> anlassen und <b>Hinzufügen</b> tippen.</li></ol>
+<p>Danach startet LevelUp über das Symbol direkt.</p>
+</div>
+<p id="err" hidden>In diesem Link fehlt die Adresse von LevelUp.</p>
+<a class="go" id="go" href="#" hidden>LevelUp öffnen</a>
+</main>
+<script>
+(function(){
+  var m=/[#&]u=([^&]+)/.exec(location.hash),u=m?decodeURIComponent(m[1]):'';
+  var ok=/^https:\/\/claude\.ai\/(artifact|code\/artifact)\/[A-Za-z0-9_-]+\/?$/.test(u);
+  var app=window.navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
+  var go=document.getElementById('go');
+  if(!ok){document.getElementById('err').hidden=false;return}
+  go.href=u;go.hidden=false;
+  if(app){document.getElementById('h').textContent='LevelUp wird geöffnet …';setTimeout(function(){location.replace(u)},150)}
+  else document.getElementById('info').hidden=false;
+})();
+</script>
+</body></html>
