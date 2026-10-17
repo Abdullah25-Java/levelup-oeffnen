@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>App öffnen · LevelUp</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--bg:#f4f4f8;--card:#fff;--fg:#14142b;--mute:#6b6b80;--acc:#4f46e5;--accfg:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#0b0b12;--card:#17172a;--fg:#f2f2f7;--mute:#a1a1b5;--acc:#8b85ff;--accfg:#0b0b12;color-scheme:dark}}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-left)) 24px max(16px,env(safe-area-inset-right))}
+main{background:var(--card);border-radius:20px;padding:28px 22px;width:min(420px,100%);display:grid;gap:14px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+h1{font-size:1.3rem;margin:0}p{margin:0;color:var(--mute);font-size:.95rem}
+a.b{display:block;padding:15px 18px;border-radius:14px;background:var(--acc);color:var(--accfg);font-weight:650;text-decoration:none;font-size:1.05rem}
+a.w{color:var(--acc);text-decoration:none;font-weight:600;font-size:.95rem}
+</style></head>
+<body><main>
+<h1 id="t">App wird geöffnet …</h1>
+<p id="s">Falls nichts passiert, tipp auf den Knopf.</p>
+<a class="b" id="go" href="#">App öffnen</a>
+<a class="w" id="web" href="#" hidden>Stattdessen die Website öffnen</a>
+<p style="font-size:.8rem">Weiterleitung für LevelUp. Diese Seite speichert nichts.</p>
+</main>
+<script>
+(function(){
+  var q={};(location.hash.slice(1)||'').split('&').forEach(function(p){var i=p.indexOf('=');if(i>0)q[p.slice(0,i)]=decodeURIComponent(p.slice(i+1))});
+  var a=q.a||'',w=q.w||'',n=q.n||'App';
+  var ok=/^[a-z][a-z0-9+.-]*:/i.test(a)&&!/^(javascript|data|vbscript|file):/i.test(a);
+  var okw=/^https?:\/\//i.test(w);
+  document.getElementById('t').textContent=ok?n+' wird geöffnet …':'Kein App-Link angegeben';
+  var go=document.getElementById('go');go.textContent=n+' öffnen';
+  if(ok){go.href=a;setTimeout(function(){location.href=a},250)}else go.hidden=true;
+  if(okw){var e=document.getElementById('web');e.href=w;e.hidden=false}
+})();
+</script>
+</body></html>
